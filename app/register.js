@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/config';
+import { auth, db } from '../firebase/config'; // 내부적으로 백엔드 연결 (구글 클라우드 )
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function RegisterScreen() {
     }
     setLoading(true);
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const { user } = await createUserWithEmailAndPassword(auth, email, password); // 실제로cofig.js에서 가져온 auth (연결객체)
       await updateProfile(user, { displayName: name });
       await setDoc(doc(db, 'users', user.uid), {
         name,
@@ -32,10 +32,11 @@ export default function RegisterScreen() {
       });
       router.replace('/home');
     } catch (e) {
+      console.error('회원가입 에러:', e.code, e.message);
       if (e.code === 'auth/email-already-in-use') {
         Alert.alert('오류', '이미 사용 중인 이메일입니다.');
       } else {
-        Alert.alert('오류', '회원가입에 실패했습니다.');
+        Alert.alert('오류', `회원가입 실패: ${e.message}`);
       }
     } finally {
       setLoading(false);
