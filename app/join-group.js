@@ -11,7 +11,7 @@ export default function JoinGroupScreen() {
 
   async function handleJoin() {
     if (code.trim().length !== 6) {
-      Alert.alert('입력 오류', '6자리 초대코드를 입력해주세요.');
+      window.alert('6자리 초대코드를 입력해주세요.');
       return;
     }
     setLoading(true);
@@ -21,7 +21,7 @@ export default function JoinGroupScreen() {
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        Alert.alert('오류', '유효하지 않은 초대코드입니다.');
+        window.alert('유효하지 않은 초대코드입니다.');
         return;
       }
 
@@ -29,7 +29,7 @@ export default function JoinGroupScreen() {
       const groupData = groupDoc.data();
 
       if (groupData.members.includes(user.uid)) {
-        Alert.alert('알림', '이미 참여 중인 그룹입니다.');
+        window.alert('이미 참여 중인 그룹입니다.');
         return;
       }
 
@@ -37,12 +37,11 @@ export default function JoinGroupScreen() {
         members: arrayUnion(user.uid),
       });
 
-      Alert.alert('완료', `"${groupData.name}" 그룹에 참여했어요!`, [
-        { text: '확인', onPress: () => router.replace('/home') },
-      ]);
+      window.alert(`"${groupData.name}" 그룹에 참여했어요!`);
+      router.replace('/home');
     } catch (e) {
       console.error(e);
-      Alert.alert('오류', '참여에 실패했습니다.');
+      window.alert('참여에 실패했습니다.');
     } finally {
       setLoading(false);
     }

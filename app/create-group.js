@@ -34,12 +34,11 @@ export default function CreateGroupScreen() {
         createdBy: user.uid,
         createdAt: new Date().toISOString(),
       });
-      Alert.alert('완료', `그룹이 만들어졌어요!\n초대코드: ${inviteCode}`, [
-        { text: '확인', onPress: () => router.replace('/home') },
-      ]);
+      window.alert(`그룹이 만들어졌어요!\n초대코드: ${inviteCode}`);
+      router.replace('/home');
     } catch (e) {
       console.error(e);
-      Alert.alert('오류', '그룹 생성에 실패했습니다.');
+      window.alert('그룹 생성에 실패했습니다.');
     } finally {
       setLoading(false);
     }

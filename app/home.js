@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, StyleSheet, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import { collection, query, where, onSnapshot, deleteDoc, doc, updateDoc, arrayRemove } from 'firebase/firestore';
@@ -54,7 +54,7 @@ export default function HomeScreen() {
   function renderGroup({ item }) {
     const isOwner = item.createdBy === user.uid;
     return (
-      <View style={styles.groupCard}>
+      <Pressable style={styles.groupCard} onPress={() => router.push(`/group/${item.id}`)}>
         <View style={styles.groupInfo}>
           <Text style={styles.groupName}>{item.name}</Text>
           <Text style={styles.groupCode}>초대코드: {item.inviteCode}</Text>
@@ -66,7 +66,7 @@ export default function HomeScreen() {
         >
           <Text style={styles.actionBtnText}>{isOwner ? '삭제' : '나가기'}</Text>
         </TouchableOpacity>
-      </View>
+      </Pressable>
     );
   }
 
