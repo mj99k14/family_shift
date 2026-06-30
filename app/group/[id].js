@@ -120,12 +120,14 @@ export default function GroupScreen() {
 
   const myShift = getMyShift();
   const shiftColor = SHIFTS.find((s) => s.key === myShift)?.color;
+  const today = new Date().toISOString().split('T')[0];
+  const isPast = selectedDate && selectedDate < today;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.back}>← 뒤로</Text>
+        <TouchableOpacity onPress={() => router.replace('/home')}>
+          <Text style={styles.back}>← 홈</Text>
         </TouchableOpacity>
         <Text style={styles.title}>{group?.name}</Text>
         <Text style={styles.memberCount}>멤버 {group?.members?.length}명</Text>
@@ -144,7 +146,7 @@ export default function GroupScreen() {
         markingType="multi-dot"
         onDayPress={(day) => {
           setSelectedDate(day.dateString);
-          setModalVisible(true);
+          if (day.dateString >= today) setModalVisible(true);
         }}
         markedDates={getMarkedDates()}
         theme={{
@@ -168,7 +170,7 @@ export default function GroupScreen() {
               ) : (
                 <Text style={styles.noShift}>미입력</Text>
               )}
-              {m.uid === user.uid && (
+              {m.uid === user.uid && !isPast && (
                 <TouchableOpacity style={styles.editBtn} onPress={() => setModalVisible(true)}>
                   <Text style={styles.editBtnText}>수정</Text>
                 </TouchableOpacity>

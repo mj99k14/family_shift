@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/config';
@@ -8,19 +8,33 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [saveEmail, setSaveEmail] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('savedEmail');
+    if (saved) {
+      setEmail(saved);
+      setSaveEmail(true);
+    }
+  }, []);
 
   async function handleLogin() {
     if (!email || !password) {
-      Alert.alert('입력 오류', '이메일과 비밀번호를 입력해주세요.');
+      window.alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      if (saveEmail) {
+        localStorage.setItem('savedEmail', email);
+      } else {
+        localStorage.removeItem('savedEmail');
+      }
       router.replace('/home');
     } catch (e) {
-      Alert.alert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다.');
+      window.alert('이메일 또는 비밀번호가 올바르지 않습니다.');
     } finally {
       setLoading(false);
     }
@@ -46,6 +60,13 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
+
+      <TouchableOpacity style={styles.checkRow} onPress={() => setSaveEmail(!saveEmail)}>
+        <View style={[styles.checkbox, saveEmail && styles.checkboxOn]}>
+          {saveEmail && <Text style={styles.checkMark}>✓</Text>}
+        </View>
+        <Text style={styles.checkLabel}>이메일 저장</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? '로그인 중...' : '로그인'}</Text>
@@ -86,12 +107,39 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     fontSize: 15,
   },
+  checkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 8,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxOn: {
+    backgroundColor: '#2563EB',
+    borderColor: '#2563EB',
+  },
+  checkMark: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  checkLabel: {
+    fontSize: 14,
+    color: '#374151',
+  },
   button: {
     backgroundColor: '#2563EB',
     borderRadius: 10,
     padding: 16,
     alignItems: 'center',
-    marginTop: 4,
     marginBottom: 20,
   },
   buttonText: {

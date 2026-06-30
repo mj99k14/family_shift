@@ -46,8 +46,8 @@ export default function CreateGroupScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-        <Text style={styles.backText}>← 뒤로</Text>
+      <TouchableOpacity onPress={() => router.replace('/home')} style={styles.back}>
+        <Text style={styles.backText}>← 홈</Text>
       </TouchableOpacity>
 
       <Text style={styles.title}>그룹 만들기</Text>
