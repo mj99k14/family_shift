@@ -60,13 +60,15 @@
 
 ---
 
-## Phase 5 — 마무리 & 배포 🔜 다음
+## Phase 5 — 마무리 & 배포 🚧 진행 중
 
-- [ ] UI 전체 다듬기
-- [ ] 로딩/에러 처리 보완
-- [ ] EAS Build 설정
-- [ ] TestFlight (iOS) 배포 테스트
-- [ ] App Store / Play Store 제출
+- [x] 뒤로가기 → 홈으로 이동 (router.replace('/home'))
+- [x] 로그인 에러 알림 (window.alert으로 모바일 브라우저 호환)
+- [x] 이메일 저장 체크박스 (localStorage 활용)
+- [x] 과거 날짜 근무 수정 잠금 (오늘 이전 날짜 비활성화)
+- [ ] Vercel 배포 (무료 호스팅, 고정 URL)
+- [ ] PWA 설정 (홈 화면 추가 → 앱처럼 사용)
+- [ ] 웹 푸시 알림 (FCM, Android Chrome / iOS Safari 지원)
 
 ---
 
